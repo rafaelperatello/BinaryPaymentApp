@@ -95,7 +95,10 @@ class MainActivity : AppCompatActivity() {
                     MainViewModel.MainViewModelState.Ready -> Unit
                     MainViewModel.MainViewModelState.ValidFields -> clearErrors()
                     is MainViewModel.MainViewModelState.InvalidFields -> showErrors(it.fields)
-                    MainViewModel.MainViewModelState.Success -> showSuccess()
+                    MainViewModel.MainViewModelState.Success -> {
+                        clearErrors()
+                        showSuccess()
+                    }
 
                 }
             }
