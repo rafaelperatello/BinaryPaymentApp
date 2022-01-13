@@ -1,6 +1,6 @@
 package com.penguinpay.di
 
-import androidx.viewbinding.BuildConfig
+import com.penguinpay.BuildConfig
 import com.penguinpay.data.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides

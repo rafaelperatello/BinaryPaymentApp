@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">PenguinPay</string>
 
+    <string name="binary_digits">01</string>
+
     <string name="text_first_name">First name</string>
     <string name="text_last_name">Last name</string>
     <string name="text_phone_number">Phone number</string>
@@ -10,6 +12,18 @@
     <string name="text_receive_amount">Amount to receive</string>
     <string name="text_rate">Conversion rate</string>
 
+    <string name="button_ok">OK</string>
     <string name="button_send">Send</string>
+    <string name="result_success_title">Transfer</string>
+    <string name="result_success_text">Money sent successfully</string>
+
+    <string name="error_network">Network error</string>
+    <string name="action_retry">Retry</string>
+
+    <string name="field_error_country">Select a country</string>
+    <string name="field_error_first_name">Invalid name</string>
+    <string name="field_error_last_name">Invalid last name</string>l
+    <string name="field_error_phone">Invalid Phone</string>
+    <string name="field_error_amount">Invalid Amount</string>
 
 </resources>

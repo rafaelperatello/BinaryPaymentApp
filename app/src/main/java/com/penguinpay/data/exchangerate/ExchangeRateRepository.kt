@@ -11,7 +11,7 @@ import kotlin.coroutines.CoroutineContext
 
 interface ExchangeRateRepository {
 
-    suspend fun getExchangeRate(): Resource<ExchangeRate>
+    suspend fun getExchangeRate(symbols: String): Resource<ExchangeRate>
 }
 
 class ExchangeRateRepositoryImpl @Inject constructor(
@@ -20,17 +20,18 @@ class ExchangeRateRepositoryImpl @Inject constructor(
     private val remoteDataSource: ExchangeRateRemoteDataSource
 ) : ExchangeRateRepository {
 
-    override suspend fun getExchangeRate(): Resource<ExchangeRate> = withContext(ioContext) {
-        localDataSource.getFromCache()?.let {
-            Log.i("getExchangeRate", "cache hit $it")
-            Resource.Success(it)
-        } ?: remoteDataSource.fetch().toResource().also {
-            Log.i("getExchangeRate", "remote call $it")
+    override suspend fun getExchangeRate(symbols: String): Resource<ExchangeRate> =
+        withContext(ioContext) {
+            localDataSource.getFromCache()?.let {
+                Log.i("getExchangeRate", "cache hit $it")
+                Resource.SuccessData(it)
+            } ?: remoteDataSource.fetch(symbols).toResource().also {
+                Log.i("getExchangeRate", "remote call $it")
 
-            if (it is Resource.Success) {
-                Log.i("getExchangeRate", "adding to cache ${it.data}")
-                localDataSource.addToCache(it.data)
+                if (it is Resource.SuccessData) {
+                    Log.i("getExchangeRate", "adding to cache ${it.data}")
+                    localDataSource.addToCache(it.data)
+                }
             }
         }
-    }
 }

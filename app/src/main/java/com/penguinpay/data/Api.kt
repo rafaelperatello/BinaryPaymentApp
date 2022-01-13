@@ -4,9 +4,8 @@ import android.util.Log
 import retrofit2.Response
 
 object Constants {
-
-    // Todo
-    const val BASE_URL = "https://dog.ceo/"
+    const val BASE_URL = "https://openexchangerates.org/"
+    const val API_KEY = "01f1121c009146268e284b8714bd70a7"
 }
 
 /**
@@ -31,7 +30,7 @@ fun <T> NetworkResult<T>.toResource(): Resource<T> {
             Log.e("Mapping to resource", "Data is empty")
             Resource.ErrorEmptyData()
         } else {
-            Resource.Success<T>(data)
+            Resource.SuccessData<T>(data)
         }
     } else {
         Log.e("Mapping to resource", "Error fetching data: $message")

@@ -1,5 +1,6 @@
 package com.penguinpay.data.exchangerate
 
+import com.penguinpay.data.Constants
 import com.penguinpay.data.NetworkResult
 import com.penguinpay.data.safeApiCall
 import javax.inject.Inject
@@ -9,18 +10,14 @@ import javax.inject.Inject
  */
 interface ExchangeRateRemoteDataSource {
 
-    suspend fun fetch(): NetworkResult<ExchangeRate>
+    suspend fun fetch(symbols: String): NetworkResult<ExchangeRate>
 }
 
 class ExchangeRateRemoteDataSourceImpl @Inject constructor(
     private val api: ExchangeRateApi
 ) : ExchangeRateRemoteDataSource {
 
-    override suspend fun fetch(): NetworkResult<ExchangeRate> {
-        return safeApiCall { api.getExchangeRate() }
+    override suspend fun fetch(symbols: String): NetworkResult<ExchangeRate> {
+        return safeApiCall { api.getExchangeRate(Constants.API_KEY, "USD", symbols, true) }
     }
-
-//    override suspend fun fetch(): NetworkResult<ExchangeRate> {
-//        return NetworkResult.Success(ExchangeRate(System.currentTimeMillis(), emptyMap()))
-//    }
 }
