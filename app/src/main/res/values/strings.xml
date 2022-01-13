@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">PenguinPay</string>
+
+    <string name="text_first_name">First name</string>
+    <string name="text_last_name">Last name</string>
+    <string name="text_phone_number">Phone number</string>
+    <string name="text_country">Country</string>
+    <string name="text_send_amount">Amount to send</string>
+
+    <string name="text_receive_amount">Amount to receive</string>
+    <string name="text_rate">Conversion rate</string>
+
+    <string name="button_send">Send</string>
+
+</resources>
