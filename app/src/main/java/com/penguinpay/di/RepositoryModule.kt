@@ -35,6 +35,7 @@ abstract class RepositoryModule {
 
         @Singleton
         @Provides
-        fun provideExchangeRateApi(retrofit: Retrofit): ExchangeRateApi = retrofit.create(ExchangeRateApi::class.java)
+        fun provideExchangeRateApi(retrofit: Retrofit): ExchangeRateApi =
+            retrofit.create(ExchangeRateApi::class.java)
     }
 }
