@@ -10,7 +10,6 @@ import com.penguinpay.domain.CountryProvider
 import com.penguinpay.domain.ExchangeRateInteractor
 import com.penguinpay.domain.PhoneNumberInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
-@FlowPreview
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val exchangeRateInteractor: ExchangeRateInteractor,
@@ -28,12 +26,12 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     sealed class MainViewModelState {
-        object Loading : MainViewModelState()
-        object Ready : MainViewModelState()
-        object InternetError : MainViewModelState()
-        object ValidFields : MainViewModelState()
+        data object Loading : MainViewModelState()
+        data object Ready : MainViewModelState()
+        data object InternetError : MainViewModelState()
+        data object ValidFields : MainViewModelState()
         class InvalidFields(val fields: List<Pair<String, Int>>) : MainViewModelState()
-        object Success : MainViewModelState()
+        data object Success : MainViewModelState()
     }
 
     companion object {
@@ -111,7 +109,11 @@ class MainViewModel @Inject constructor(
             fields.add(INPUT_PHONE)
         }
 
-        if (amount.isBlank()) {
+        val containsZeroOnly = amount.fold(true) { acc, c ->
+            acc && c == '0'
+        }
+
+        if (amount.isBlank() || containsZeroOnly) {
             fields.add(INPUT_AMOUNT)
         }
 

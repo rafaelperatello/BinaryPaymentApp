@@ -16,10 +16,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.penguinpay.R
 import com.penguinpay.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
-@FlowPreview
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 

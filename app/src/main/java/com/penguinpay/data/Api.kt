@@ -5,7 +5,7 @@ import retrofit2.Response
 
 object Constants {
     const val BASE_URL = "https://openexchangerates.org/"
-    const val API_KEY = "01f1121c009146268e284b8714bd70a7"
+    const val API_KEY = "3db9412fa8374b359ae898f7886d08b2"
 }
 
 /**
