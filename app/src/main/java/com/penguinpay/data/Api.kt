@@ -1,11 +1,12 @@
 package com.penguinpay.data
 
 import android.util.Log
+import com.penguinpay.BuildConfig
 import retrofit2.Response
 
 object Constants {
     const val BASE_URL = "https://openexchangerates.org/"
-    const val API_KEY = "3db9412fa8374b359ae898f7886d08b2"
+    const val API_KEY = BuildConfig.API_KEY
 }
 
 /**

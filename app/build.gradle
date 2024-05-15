@@ -21,9 +21,20 @@ android {
     }
 
     buildTypes {
+        def properties = new Properties()
+        properties.load(new FileInputStream("$project.rootDir/api.properties"))
+        def API_KEY = "API_KEY"
+        def CONFIG = { k -> "\"${properties.get(k)}\"" }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", API_KEY, CONFIG(API_KEY)
+        }
+
+        debug {
+            buildConfigField "String", API_KEY, CONFIG(API_KEY)
         }
     }
     compileOptions {
