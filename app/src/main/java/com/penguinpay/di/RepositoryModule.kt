@@ -1,12 +1,12 @@
 package com.penguinpay.di
 
-import com.penguinpay.data.exchangerate.ExchangeRateApi
-import com.penguinpay.data.exchangerate.ExchangeRateLocalDataSource
-import com.penguinpay.data.exchangerate.ExchangeRateLocalDataSourceImpl
-import com.penguinpay.data.exchangerate.ExchangeRateRemoteDataSource
-import com.penguinpay.data.exchangerate.ExchangeRateRemoteDataSourceImpl
-import com.penguinpay.data.exchangerate.ExchangeRateRepository
+import com.penguinpay.data.exchangerate.remote.ExchangeRateApi
+import com.penguinpay.data.exchangerate.local.ExchangeRateLocalDataSource
+import com.penguinpay.data.exchangerate.local.ExchangeRateLocalDataSourceImpl
+import com.penguinpay.data.exchangerate.remote.ExchangeRateRemoteDataSource
+import com.penguinpay.data.exchangerate.remote.ExchangeRateRemoteDataSourceImpl
 import com.penguinpay.data.exchangerate.ExchangeRateRepositoryImpl
+import com.penguinpay.domain.repository.ExchangeRateRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

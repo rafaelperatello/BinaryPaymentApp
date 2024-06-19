@@ -1,4 +1,4 @@
-package com.penguinpay.domain
+package com.penguinpay.util
 
 import java.util.*
 import javax.inject.Inject

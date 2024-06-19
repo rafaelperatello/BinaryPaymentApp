@@ -1,4 +1,4 @@
-package com.penguinpay.data
+package com.penguinpay.domain.util
 
 sealed class Resource<T> {
 

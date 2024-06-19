@@ -2,6 +2,7 @@ package com.penguinpay.data
 
 import android.util.Log
 import com.penguinpay.BuildConfig
+import com.penguinpay.domain.util.Resource
 import retrofit2.Response
 
 object Constants {
@@ -25,13 +26,13 @@ sealed class NetworkResult<T>(
 /**
  * Map NetworkResult into Resource
  */
-fun <T> NetworkResult<T>.toResource(): Resource<T> {
+fun <E, M> NetworkResult<E>.toResource(mapToModel: E.() -> M): Resource<M> {
     return if (this is NetworkResult.Success) {
         if (data == null) {
             Log.e("Mapping to resource", "Data is empty")
             Resource.ErrorEmptyData()
         } else {
-            Resource.SuccessData<T>(data)
+            Resource.SuccessData(data.mapToModel())
         }
     } else {
         Log.e("Mapping to resource", "Error fetching data: $message")

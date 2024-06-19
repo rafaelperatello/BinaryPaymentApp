@@ -1,5 +1,7 @@
-package com.penguinpay.data.exchangerate
+package com.penguinpay.data.exchangerate.local
 
+import com.penguinpay.data.exchangerate.ExchangeRateEntity
+import com.penguinpay.domain.model.ExchangeRate
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

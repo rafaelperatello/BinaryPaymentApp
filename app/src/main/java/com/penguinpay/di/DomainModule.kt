@@ -1,10 +1,9 @@
 package com.penguinpay.di
 
-import com.google.i18n.phonenumbers.PhoneNumberUtil
-import com.penguinpay.domain.*
+import com.penguinpay.domain.GetExchangeRateUseCase
+import com.penguinpay.domain.GetExchangeRateUseCaseImpl
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -15,22 +14,6 @@ abstract class DomainModule {
 
     @Singleton
     @Binds
-    abstract fun bindCountryProvider(source: CountryProviderImpl): CountryProvider
+    abstract fun bindGetExchangeRateUseCase(source: GetExchangeRateUseCaseImpl): GetExchangeRateUseCase
 
-    @Singleton
-    @Binds
-    abstract fun bindExchangeRateInteractor(source: ExchangeRateInteractorImpl): ExchangeRateInteractor
-
-    @Singleton
-    @Binds
-    abstract fun bindPhoneNumberInteractor(source: PhoneNumberInteractorImpl): PhoneNumberInteractor
-
-    companion object {
-
-        @Singleton
-        @Provides
-        fun providePhoneNumberUtil(): PhoneNumberUtil {
-            return PhoneNumberUtil.getInstance()
-        }
-    }
 }

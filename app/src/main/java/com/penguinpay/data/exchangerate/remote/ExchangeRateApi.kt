@@ -1,6 +1,6 @@
-package com.penguinpay.data.exchangerate
+package com.penguinpay.data.exchangerate.remote
 
-import com.google.gson.annotations.SerializedName
+import com.penguinpay.data.exchangerate.ExchangeRateEntity
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -13,12 +13,5 @@ interface ExchangeRateApi {
         @Query("base") base: String,
         @Query("symbols") symbols: String,
         @Query("prettyprint") prettyPrint: Boolean
-    ): Response<ExchangeRate>
+    ): Response<ExchangeRateEntity>
 }
-
-data class ExchangeRate(
-    @SerializedName("timestamp")
-    val timestamp: Long = 0,
-    @SerializedName("rates")
-    val rates: Map<String, String>
-)

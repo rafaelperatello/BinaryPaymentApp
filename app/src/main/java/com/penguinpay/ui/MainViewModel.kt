@@ -4,12 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.penguinpay.R
-import com.penguinpay.data.Resource
-import com.penguinpay.domain.Country
-import com.penguinpay.domain.CountryProvider
-import com.penguinpay.domain.ExchangeRateInteractor
-import com.penguinpay.domain.PhoneNumberInteractor
+import com.penguinpay.domain.GetExchangeRateUseCase
+import com.penguinpay.domain.repository.ExchangeRateRepository
+import com.penguinpay.domain.util.Resource
+import com.penguinpay.util.Country
+import com.penguinpay.util.CountryProvider
+import com.penguinpay.util.PhoneNumberHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -18,10 +20,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
+internal const val BASE_CURRENCY = "USD"
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val exchangeRateInteractor: ExchangeRateInteractor,
-    private val phoneNumberInteractor: PhoneNumberInteractor,
+    private val exchangeRateRepository: ExchangeRateRepository,
+    private val getExchangeRateUseCase: GetExchangeRateUseCase,
+    private val phoneNumberHelper: PhoneNumberHelper,
     private val countryProvider: CountryProvider
 ) : ViewModel() {
 
@@ -59,6 +64,10 @@ class MainViewModel @Inject constructor(
 
     val countryNames: List<String> by lazy {
         countryProvider.countries.map { it.name }
+    }
+
+    private val symbols by lazy {
+        countryProvider.countries.joinToString(",") { it.currency }
     }
 
     fun init() {
@@ -101,7 +110,7 @@ class MainViewModel @Inject constructor(
             fields.add(INPUT_LAST_NAME)
         }
 
-        if (phoneNumber.isBlank() || !phoneNumberInteractor.isNumberValid(
+        if (phoneNumber.isBlank() || !phoneNumberHelper.isNumberValid(
                 phoneNumber,
                 selectedCountry
             )
@@ -136,13 +145,18 @@ class MainViewModel @Inject constructor(
         _viewState.value = MainViewModelState.Loading
 
         viewModelScope.launch {
-            _viewState.value = when (exchangeRateInteractor.init()) {
-                is Resource.Success -> MainViewModelState.Ready
-                else -> MainViewModelState.InternetError
-            }
+            _viewState.value =
+                when (exchangeRateRepository.getExchangeRate(symbols, BASE_CURRENCY)) {
+                    is Resource.ErrorEmptyData,
+                    is Resource.ErrorNetwork -> MainViewModelState.InternetError
+
+                    is Resource.Success,
+                    is Resource.SuccessData -> MainViewModelState.Ready
+                }
         }
     }
 
+    @OptIn(FlowPreview::class)
     private fun listenChangesToAmount() {
         viewModelScope.launch {
             amountToSend
@@ -151,9 +165,11 @@ class MainViewModel @Inject constructor(
                     val value = if (amount.isBlank()) {
                         ""
                     } else {
-                        (exchangeRateInteractor.convert(
-                            amount,
-                            selectedCountry
+                        (getExchangeRateUseCase.execute(
+                            symbols = symbols,
+                            baseCurrency = BASE_CURRENCY,
+                            amount = amount,
+                            country = selectedCountry
                         ) as? Resource.SuccessData)
                             ?.data
                             ?: ""

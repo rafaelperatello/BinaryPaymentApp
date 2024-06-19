@@ -1,19 +1,19 @@
-package com.penguinpay.domain
+package com.penguinpay.util
 
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import javax.inject.Inject
 
 
-interface PhoneNumberInteractor {
+interface PhoneNumberHelper {
 
     fun isNumberValid(phone: String, country: Country): Boolean
 
 }
 
-class PhoneNumberInteractorImpl @Inject constructor(
+class PhoneNumberHelperImpl @Inject constructor(
     private val phoneNumberUtil: PhoneNumberUtil
-) : PhoneNumberInteractor {
+) : PhoneNumberHelper {
 
     override fun isNumberValid(phone: String, country: Country): Boolean {
         try {

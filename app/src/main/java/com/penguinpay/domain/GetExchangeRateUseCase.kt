@@ -1,44 +1,42 @@
 package com.penguinpay.domain
 
-import com.penguinpay.data.Resource
-import com.penguinpay.data.exchangerate.ExchangeRateRepository
+import com.penguinpay.domain.repository.ExchangeRateRepository
+import com.penguinpay.domain.util.Resource
+import com.penguinpay.util.Country
 import java.math.BigDecimal
 import javax.inject.Inject
 import kotlin.math.pow
 
 
-interface ExchangeRateInteractor {
+interface GetExchangeRateUseCase {
 
-    suspend fun init(): Resource<Unit>
-
-    suspend fun convert(amount: String, country: Country): Resource<String>
+    suspend fun execute(
+        symbols: String,
+        baseCurrency: String,
+        amount: String,
+        country: Country
+    ): Resource<String>
 }
 
-class ExchangeRateInteractorImpl @Inject constructor(
-    private val repository: ExchangeRateRepository,
-    private val countryProvider: CountryProvider
-) : ExchangeRateInteractor {
-
-    private val symbols by lazy {
-        countryProvider.countries.joinToString(",") { it.currency }
-    }
-
-    override suspend fun init(): Resource<Unit> {
-        return when (repository.getExchangeRate(symbols)) {
-            is Resource.ErrorEmptyData,
-            is Resource.ErrorNetwork -> Resource.ErrorNetwork()
-            is Resource.Success,
-            is Resource.SuccessData -> Resource.Success()
-        }
-    }
+class GetExchangeRateUseCaseImpl @Inject constructor(
+    private val repository: ExchangeRateRepository
+) : GetExchangeRateUseCase {
 
     /**
      * Max allowed to send: 131071 (17 bits)
      * Max exchange rate: VND 22716 (2022-01-13)
      * Estimated max value: 131071 * 22716 = 2977408836 - Fits Long
      */
-    override suspend fun convert(amount: String, country: Country): Resource<String> {
-        return when (val exchange = repository.getExchangeRate(symbols)) {
+    override suspend fun execute(
+        symbols: String,
+        baseCurrency: String,
+        amount: String,
+        country: Country
+    ): Resource<String> {
+        return when (val exchange = repository.getExchangeRate(
+            symbols = symbols,
+            baseCurrency = baseCurrency
+        )) {
             is Resource.SuccessData -> {
                 val amountToSend = BigDecimal(toDecimal(amount))
                 val rate = exchange.data.rates[country.currency]
@@ -51,6 +49,7 @@ class ExchangeRateInteractorImpl @Inject constructor(
                     Resource.SuccessData(toBinary(result.longValueExact()))
                 }
             }
+
             else -> Resource.ErrorEmptyData()
         }
     }
