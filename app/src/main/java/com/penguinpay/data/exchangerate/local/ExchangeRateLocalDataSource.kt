@@ -1,11 +1,10 @@
 package com.penguinpay.data.exchangerate.local
 
-import com.penguinpay.data.exchangerate.ExchangeRateEntity
 import com.penguinpay.domain.model.ExchangeRate
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-private const val EXPIRATION_MINUTES = 10L
+private const val EXPIRATION_MINUTES = 1L
 
 /**
  * In-memory cache
@@ -34,8 +33,6 @@ class ExchangeRateLocalDataSourceImpl @Inject constructor() : ExchangeRateLocalD
     }
 
     private fun isCacheExpired(): Boolean {
-        return System.currentTimeMillis() > (cacheTimestamp + TimeUnit.MINUTES.toMillis(
-            EXPIRATION_MINUTES
-        ))
+        return System.currentTimeMillis() > (cacheTimestamp + TimeUnit.MINUTES.toMillis(EXPIRATION_MINUTES))
     }
 }
